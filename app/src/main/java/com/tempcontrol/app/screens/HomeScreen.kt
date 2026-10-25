@@ -62,14 +62,35 @@ object HomeScreen {
                 topMargin = 36
             })
 
+            
+            addView(Button(context).apply {
+                text = "📊  Historial de temperatura"
+                textSize = 16f
+                setTextColor(Color.WHITE)
+                setBackgroundColor(principal)
+
+                setOnClickListener {
+                    val activity = context as? android.app.Activity
+                    activity?.setContentView(
+                        TemperatureHistoryScreen.create(context)
+                    )
+                }
+            }, LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply {
+                topMargin = 16
+            })
+
             addView(TextView(context).apply {
-                text = "Pronto podrás consultar el historial " +
-                    "y recibir alertas."
-                textSize = 15f
+                text = "Consulta las lecturas guardadas mientras " +
+                    "el monitor está activo."
+                textSize = 14f
                 setTextColor(texto)
                 gravity = Gravity.CENTER
-                setPadding(0, 20, 0, 0)
+                setPadding(0, 16, 0, 0)
             })
+
         }
     }
 }
