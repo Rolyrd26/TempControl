@@ -75,7 +75,9 @@ object HomeScreen {
                 text = "⚙️ Configurar alerta de temperatura"
                 textSize = 16f
                 setOnClickListener {
-                    showTemperatureSettings(context)
+    (context as? Activity)?.setContentView(
+        SettingsScreen.create(context)
+    )
                 }
             }, buttonParams(12))
 
