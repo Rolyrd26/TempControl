@@ -181,3 +181,7 @@ class TemperatureMonitoringService : Service() {
 
         super.onDestroy()
     }
+    override fun onBind(intent: Intent?): IBinder? {
+        return null
+    }
+}
