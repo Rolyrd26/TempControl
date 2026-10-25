@@ -1,0 +1,45 @@
+name: Generar clave de firma de TempControl
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  generar-clave:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Preparar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Generar almacén de claves
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          if [ -z "$KEYSTORE_PASSWORD" ]; then
+            echo "::error::Falta configurar KEYSTORE_PASSWORD en los secretos del repositorio."
+            exit 1
+          fi
+
+          keytool -genkeypair -v \
+            -storetype PKCS12 \
+            -keystore tempcontrol-release.p12 \
+            -alias tempcontrol \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -dname "CN=TempControl, OU=Android, O=TempControl, C=US" \
+            -storepass "$KEYSTORE_PASSWORD" \
+            -keypass "$KEYSTORE_PASSWORD"
+
+      - name: Publicar archivo de firma
+        uses: actions/upload-artifact@v4
+        with:
+          name: TempControl-clave-firma
+          path: tempcontrol-release.p12
+          if-no-files-found: error
+          retention-days: 1
