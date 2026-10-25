@@ -1,8 +1,11 @@
+
 package com.tempcontrol.app.screens
 
 import android.content.Context
 import android.graphics.Color
 import android.view.Gravity
+import android.view.ViewGroup
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 
@@ -11,7 +14,7 @@ object HomeScreen {
     fun create(context: Context): LinearLayout {
         val fondo = Color.rgb(244, 247, 250)
         val texto = Color.rgb(35, 48, 65)
-        val principal = Color.rgb(0, 168, 150)
+        val principal = Color.rgb(0, 150, 136)
 
         return LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -40,20 +43,32 @@ object HomeScreen {
                 setPadding(0, 12, 0, 0)
             })
 
-            addView(TextView(context).apply {
-                text = "Monitor de temperatura"
-                textSize = 20f
-                setTextColor(principal)
-                gravity = Gravity.CENTER
-                setPadding(0, 36, 0, 12)
+            addView(Button(context).apply {
+                text = "🌡️  Monitor de temperatura"
+                textSize = 16f
+                setTextColor(Color.WHITE)
+                setBackgroundColor(principal)
+
+                setOnClickListener {
+                    val activity = context as? android.app.Activity
+                    activity?.setContentView(
+                        TemperatureScreen.create(context)
+                    )
+                }
+            }, LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            ).apply {
+                topMargin = 36
             })
 
             addView(TextView(context).apply {
-                text = "Pronto podrás consultar la temperatura, " +
-                    "revisar el historial y recibir alertas."
+                text = "Pronto podrás consultar el historial " +
+                    "y recibir alertas."
                 textSize = 15f
                 setTextColor(texto)
                 gravity = Gravity.CENTER
+                setPadding(0, 20, 0, 0)
             })
         }
     }
