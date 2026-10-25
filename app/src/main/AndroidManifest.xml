@@ -1,5 +1,15 @@
+
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
+    <uses-permission
+        android:name="android.permission.POST_NOTIFICATIONS" />
 
     <uses-feature
         android:name="android.hardware.sensor.ambient_temperature"
@@ -21,6 +31,17 @@
             </intent-filter>
 
         </activity>
+
+        <service
+            android:name=".monitor.TemperatureMonitoringService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Monitorización de la temperatura de la batería del teléfono" />
+
+        </service>
 
     </application>
 
