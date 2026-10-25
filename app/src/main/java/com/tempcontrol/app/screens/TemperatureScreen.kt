@@ -1,3 +1,4 @@
+
 package com.tempcontrol.app.screens
 
 import android.content.Context
@@ -5,6 +6,7 @@ import android.graphics.Color
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.tempcontrol.app.monitor.BatteryTemperatureMonitor
 
 object TemperatureScreen {
 
@@ -29,15 +31,24 @@ object TemperatureScreen {
             gravity = Gravity.CENTER
         }
 
+        val batteryTemperature =
+            BatteryTemperatureMonitor.getBatteryTemperature(context)
+
         val temperature = TextView(context).apply {
-            text = "-- °C"
+            text = batteryTemperature?.let {
+                String.format(java.util.Locale.getDefault(), "%.1f °C", it)
+            } ?: "-- °C"
             textSize = 42f
             setTextColor(Color.rgb(0, 150, 136))
             gravity = Gravity.CENTER
         }
 
         val status = TextView(context).apply {
-            text = "Esperando lectura del dispositivo"
+            text = if (batteryTemperature != null) {
+                "Temperatura de la batería"
+            } else {
+                "No se pudo obtener la temperatura"
+            }
             textSize = 16f
             setTextColor(Color.DKGRAY)
             gravity = Gravity.CENTER
