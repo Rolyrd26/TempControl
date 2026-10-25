@@ -1,7 +1,6 @@
 package com.tempcontrol.app.screens
 
 import android.app.Activity
-import android.app.ActivityManager
 import android.content.Context
 import android.graphics.Color
 import android.view.Gravity
@@ -9,13 +8,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.tempcontrol.app.monitor.TemperatureMonitoringService
 import java.util.Locale
 
 object SettingsScreen {
 
     private const val PREFS_NAME = "tempcontrol_settings"
     private const val THRESHOLD_KEY = "temperature_threshold"
+    private const val MONITORING_KEY = "monitoring_active"
     private const val DEFAULT_THRESHOLD = 40f
 
     fun create(context: Context): LinearLayout {
@@ -158,15 +157,10 @@ object SettingsScreen {
     }
 
     private fun isMonitoring(context: Context): Boolean {
-        val manager = context.getSystemService(
-            Context.ACTIVITY_SERVICE
-        ) as ActivityManager
-
-        @Suppress("DEPRECATION")
-        return manager.getRunningServices(Int.MAX_VALUE).any {
-            it.service.className ==
-                TemperatureMonitoringService::class.java.name
-        }
+        return context.getSharedPreferences(
+            PREFS_NAME,
+            Context.MODE_PRIVATE
+        ).getBoolean(MONITORING_KEY, false)
     }
 
     private fun buttonParams(topMargin: Int) =
