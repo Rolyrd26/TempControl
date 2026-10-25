@@ -4,12 +4,15 @@ package com.tempcontrol.app.screens
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
+import android.os.Handler
+import android.os.Looper
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.tempcontrol.app.monitor.BatteryTemperatureMonitor
+import java.util.Locale
 
 object TemperatureScreen {
 
@@ -35,37 +38,50 @@ object TemperatureScreen {
             setPadding(0, 24, 0, 12)
         })
 
-        val batteryTemperature =
-            BatteryTemperatureMonitor.getBatteryTemperature(context)
-
-        layout.addView(TextView(context).apply {
-            text = batteryTemperature?.let {
-                String.format(
-                    java.util.Locale.getDefault(),
-                    "%.1f °C",
-                    it
-                )
-            } ?: "-- °C"
+        val temperatureText = TextView(context).apply {
+            text = "-- °C"
             textSize = 42f
             setTextColor(Color.rgb(0, 150, 136))
             gravity = Gravity.CENTER
-        })
+        }
+        layout.addView(temperatureText)
 
-        layout.addView(TextView(context).apply {
-            text = if (batteryTemperature != null) {
-                "Temperatura de la batería"
-            } else {
-                "No se pudo obtener la temperatura"
-            }
+        val statusText = TextView(context).apply {
+            text = "Leyendo temperatura..."
             textSize = 16f
             setTextColor(Color.DKGRAY)
             gravity = Gravity.CENTER
             setPadding(0, 12, 0, 24)
-        })
+        }
+        layout.addView(statusText)
+
+        val handler = Handler(Looper.getMainLooper())
+
+        val updateTemperature = object : Runnable {
+            override fun run() {
+                val batteryTemperature =
+                    BatteryTemperatureMonitor.getBatteryTemperature(context)
+
+                temperatureText.text = batteryTemperature?.let {
+                    String.format(Locale.getDefault(), "%.1f °C", it)
+                } ?: "-- °C"
+
+                statusText.text = if (batteryTemperature != null) {
+                    "Temperatura de la batería · Actualización automática"
+                } else {
+                    "Temperatura no disponible en este momento"
+                }
+
+                handler.postDelayed(this, 2000L)
+            }
+        }
+
+        handler.post(updateTemperature)
 
         layout.addView(Button(context).apply {
             text = "← Volver al inicio"
             setOnClickListener {
+                handler.removeCallbacks(updateTemperature)
                 (context as? Activity)?.setContentView(
                     HomeScreen.create(context)
                 )
@@ -78,3 +94,4 @@ object TemperatureScreen {
         return layout
     }
 }
+
