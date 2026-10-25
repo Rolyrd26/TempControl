@@ -171,16 +171,13 @@ class TemperatureMonitoringService : Service() {
         stopSelf()
     }
 
-  override fun onDestroy() {
-    handler.removeCallbacks(monitorTask)
+    override fun onDestroy() {
+        handler.removeCallbacks(monitorTask)
 
-    getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        .edit()
-        .putBoolean(MONITORING_KEY, false)
-        .apply()
+        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean(MONITORING_KEY, false)
+            .apply()
 
-    super.onDestroy()
-  }
-
-    override fun onBind(intent: Intent?): IBinder? = null
-}
+        super.onDestroy()
+    }
