@@ -43,8 +43,9 @@ jobs:
 
           chmod 600 "$GITHUB_WORKSPACE/tempcontrol-release.p12"
 
-      - name: Dar permisos a Gradle
+            - name: Dar permisos a Gradle
         run: chmod +x gradlew
+        if: ${{ hashFiles('gradlew') != '' }}
 
       - name: Compilar APK firmado
         env:
