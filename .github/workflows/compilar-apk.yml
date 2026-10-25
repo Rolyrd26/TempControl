@@ -43,7 +43,8 @@ jobs:
 
           chmod 600 "$GITHUB_WORKSPACE/tempcontrol-release.p12"
 
-            - name: Dar permisos a Gradle
+            
+      - name: Dar permisos a Gradle
         run: chmod +x gradlew
         if: ${{ hashFiles('gradlew') != '' }}
 
@@ -51,7 +52,13 @@ jobs:
         env:
           KEYSTORE_PATH: ${{ github.workspace }}/tempcontrol-release.p12
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-        run: ./gradlew assembleRelease
+        run: |
+          if [ -f ./gradlew ]; then
+            ./gradlew assembleRelease
+          else
+            gradle assembleRelease
+          fi
+
 
       - name: Guardar APK firmado
         uses: actions/upload-artifact@v4
