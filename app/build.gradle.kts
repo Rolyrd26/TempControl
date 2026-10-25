@@ -15,11 +15,25 @@ android {
         versionName = "1.0"
     }
 
+    
+    signingConfigs {
+        create("release") {
+            storeFile = file(
+                System.getenv("KEYSTORE_PATH") ?: "tempcontrol-release.p12"
+            )
+            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: ""
+            keyAlias = "tempcontrol"
+            keyPassword = System.getenv("KEYSTORE_PASSWORD") ?: ""
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
         }
     }
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
