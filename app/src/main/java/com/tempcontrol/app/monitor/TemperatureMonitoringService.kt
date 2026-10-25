@@ -68,7 +68,7 @@ class TemperatureMonitoringService : Service() {
             return START_NOT_STICKY
         }
 
-                startForeground(NOTIFICATION_ID, createNotification())
+                        startForeground(NOTIFICATION_ID, createNotification())
 
         getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             .edit()
