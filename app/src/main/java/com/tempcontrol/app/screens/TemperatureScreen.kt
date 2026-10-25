@@ -62,6 +62,7 @@ object TemperatureScreen {
             override fun run() {
                 val batteryTemperature =
                     BatteryTemperatureMonitor.getBatteryTemperature(context)
+TemperatureHistoryStore.recordIfDue(context, batteryTemperature)
 
                 temperatureText.text = batteryTemperature?.let {
                     String.format(Locale.getDefault(), "%.1f °C", it)
