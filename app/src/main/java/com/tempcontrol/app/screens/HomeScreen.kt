@@ -164,7 +164,7 @@ object HomeScreen {
             this.topMargin = topMargin
         }
 
-    private fun showTemperatureSettings(context: Context) {
+    fun openTemperatureSettings(context: Context) {
         val prefs = context.getSharedPreferences(
             PREFS_NAME,
             Context.MODE_PRIVATE
