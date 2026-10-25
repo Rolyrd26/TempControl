@@ -66,11 +66,34 @@ object TemperatureScreen {
                     String.format(Locale.getDefault(), "%.1f °C", it)
                 } ?: "-- °C"
 
-                statusText.text = if (batteryTemperature != null) {
-                    "Temperatura de la batería · Actualización automática"
-                } else {
-                    "Temperatura no disponible en este momento"
+                
+                statusText.text = when {
+                    batteryTemperature == null -> {
+                        statusText.setTextColor(Color.DKGRAY)
+                        "Temperatura no disponible"
+                    }
+
+                    batteryTemperature < 35f -> {
+                        statusText.setTextColor(Color.rgb(46, 125, 50))
+                        "NORMAL · Temperatura adecuada"
+                    }
+
+                    batteryTemperature < 40f -> {
+                        statusText.setTextColor(Color.rgb(239, 145, 0))
+                        "CALIENTE · Vigila la temperatura"
+                    }
+
+                    batteryTemperature < 45f -> {
+                        statusText.setTextColor(Color.rgb(230, 81, 0))
+                        "MUY CALIENTE · Reduce el uso"
+                    }
+
+                    else -> {
+                        statusText.setTextColor(Color.rgb(198, 40, 40))
+                        "ALERTA · Deja de usarlo y permite que se enfríe"
+                    }
                 }
+
 
                 handler.postDelayed(this, 2000L)
             }
