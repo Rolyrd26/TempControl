@@ -28,6 +28,7 @@ class TemperatureMonitoringService : Service() {
         private const val INTERVAL_MS = 60_000L
         private const val PREFS_NAME = "tempcontrol_settings"
         private const val THRESHOLD_KEY = "temperature_threshold"
+        private const val MONITORING_KEY = "monitoring_active"
         private const val DEFAULT_THRESHOLD = 40f
     }
 
@@ -68,6 +69,10 @@ class TemperatureMonitoringService : Service() {
         }
 
         startForeground(NOTIFICATION_ID, createNotification())
+        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    .edit()
+    .putBoolean(MONITORING_KEY, true)
+    .apply()
         handler.removeCallbacks(monitorTask)
         monitorTask.run()
 
@@ -165,10 +170,16 @@ class TemperatureMonitoringService : Service() {
         stopSelf()
     }
 
-    override fun onDestroy() {
-        handler.removeCallbacks(monitorTask)
-        super.onDestroy()
-    }
+  override fun onDestroy() {
+    handler.removeCallbacks(monitorTask)
+
+    getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        .edit()
+        .putBoolean(MONITORING_KEY, false)
+        .apply()
+
+    super.onDestroy()
+  }
 
     override fun onBind(intent: Intent?): IBinder? = null
 }
