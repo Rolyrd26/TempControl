@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.tempcontrol.app.monitor.BatteryTemperatureMonitor
+import com.tempcontrol.app.history.TemperatureHistoryStore
 import java.util.Locale
 
 object TemperatureScreen {
